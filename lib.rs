@@ -16,6 +16,7 @@ pub struct LetterMover {
     dy: ModNumC<usize, BUFFER_HEIGHT>,
     pub example: [usize; 6],
     pub bad:[usize;6],
+    score:isize
 }
 
 
@@ -30,7 +31,8 @@ impl LetterMover {
             dx: ModNumC::new(0),
             dy: ModNumC::new(0),
             example: [2,5,8,16,15,9],
-            bad:[1,3,7,19,13,11]
+            bad:[1,3,7,19,13,11],
+            score:0
         }
     }
 
@@ -43,6 +45,7 @@ impl LetterMover {
     pub fn tick(&mut self) {
         self.draw_food();
         self.draw_bad();
+        self.draw_score();
         self.clear_current();
         self.update_location();
         self.draw_current();
@@ -62,6 +65,7 @@ impl LetterMover {
                 if x == *y && self.row.a() == *y  {
                     self.letters[self.next_letter.a()] = '*';
                     self.next_letter += 1;
+                    self.score += 1;
                     self.num_letters = self.num_letters.saturating_add(&ModNumC::new(1));
                 }
             }
@@ -144,6 +148,10 @@ impl LetterMover {
         self.row = ModNumC::new(BUFFER_HEIGHT / 2);
         self.dx = ModNumC::new(0);
         self.dy = ModNumC::new(0);
+    }
+
+    fn draw_score(&mut self){
+        plot_num(self.score,0,0,ColorCode::new(Color::Yellow,Color::Black));
     }
 
 }
